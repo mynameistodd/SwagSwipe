@@ -1,5 +1,7 @@
 package com.swaggaming.swagswipe;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,8 +22,8 @@ public class MainActivityFragment extends Fragment {
 
     private String TAG = "SWAG";
     private Button importButton;
-    private Button resetButton;
     private ProgressBar progressBar;
+    private SharedPreferences prefs;
 
     public MainActivityFragment() {
     }
@@ -32,21 +34,28 @@ public class MainActivityFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
         importButton = (Button) view.findViewById(R.id.importButton);
-        resetButton = (Button) view.findViewById(R.id.resetButton);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         progressBar.setIndeterminate(true);
+
+        prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+
+        if (prefs.getBoolean(getString(R.string.imported), false)) {
+            importButton.setText(R.string.import_dictionary_undo);
+        } else {
+            importButton.setText(R.string.import_dictionary);
+        }
 
         importButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AddWordDictionaryAsyncTask().execute();
-            }
-        });
+                boolean isImported = prefs.getBoolean(getString(R.string.imported), false);
+                Log.d(TAG, "Imported Pref: " + isImported);
 
-        resetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new ResetDictionaryAsyncTask().execute();
+                if (!isImported) {
+                    new AddWordDictionaryAsyncTask().execute();
+                } else {
+                    new ResetDictionaryAsyncTask().execute();
+                }
             }
         });
 
@@ -96,8 +105,10 @@ public class MainActivityFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            prefs.edit().putBoolean(getString(R.string.imported), true).apply();
+
+            importButton.setText(R.string.import_dictionary_undo);
             progressBar.setVisibility(View.GONE);
-            importButton.setText("Undo Import");
         }
     }
 
@@ -141,8 +152,10 @@ public class MainActivityFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            prefs.edit().putBoolean(getString(R.string.imported), false).apply();
+
+            importButton.setText(R.string.import_dictionary);
             progressBar.setVisibility(View.GONE);
-            importButton.setText("Import");
         }
     }
 }
