@@ -1,8 +1,9 @@
 <resources>
-    <string name="app_name">Swag Swipe</string>
+    <string name="app_name">Swag Swipe for Dota</string>
     <string name="action_settings">Settings</string>
     <string name="imported">imported</string>
-    <string name="import_dictionary">Import Now</string>
-    <string name="import_dictionary_undo">Revert Import</string>
+    <string name="import_dictionary">Add Dota Terms</string>
+    <string name="import_dictionary_undo">Remove Dota Terms</string>
     <string name="dota2_tile_title">Dictionary for DOTA 2</string>
+    <string name="instructions">Click to add popular Dota terms usable by your Google Keyboard. Click again to remove terms.</string>
 </resources>

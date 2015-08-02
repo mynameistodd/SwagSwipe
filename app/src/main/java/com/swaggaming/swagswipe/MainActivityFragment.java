@@ -3,7 +3,6 @@ package com.swaggaming.swagswipe;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.UserDictionary;
 import android.support.v4.app.Fragment;
@@ -12,7 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,7 +24,10 @@ import java.io.InputStreamReader;
 
 public class MainActivityFragment extends Fragment {
 
+    public static GoogleAnalytics analytics;
+    public static Tracker tracker;
     private String TAG = "SWAG";
+    private LinearLayout tileLinearLayout;
     private Button importButton;
     private ProgressBar progressBar;
     private SharedPreferences prefs;
@@ -29,10 +36,20 @@ public class MainActivityFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        analytics = GoogleAnalytics.getInstance(getActivity());
+
+        tracker = analytics.newTracker(R.xml.global_tracker);
+        tracker.enableAdvertisingIdCollection(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
+        tileLinearLayout = (LinearLayout) view.findViewById(R.id.tileLinearLayout);
         importButton = (Button) view.findViewById(R.id.importButton);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         progressBar.setIndeterminate(true);
@@ -40,8 +57,10 @@ public class MainActivityFragment extends Fragment {
         prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
 
         if (prefs.getBoolean(getString(R.string.imported), false)) {
+            tileLinearLayout.setBackground(getActivity().getResources().getDrawable(R.drawable.remove));
             importButton.setText(R.string.import_dictionary_undo);
         } else {
+            tileLinearLayout.setBackground(getActivity().getResources().getDrawable(R.drawable.add));
             importButton.setText(R.string.import_dictionary);
         }
 
@@ -79,11 +98,8 @@ public class MainActivityFragment extends Fragment {
                 String line;
                 while ((line = reader.readLine()) != null) {
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        UserDictionary.Words.addWord(getActivity(), line, 128, null, null);
-                    } else {
-                        UserDictionary.Words.addWord(getActivity(), line, 128, UserDictionary.Words.LOCALE_TYPE_ALL);
-                    }
+                    UserDictionary.Words.addWord(getActivity(), line, 128, null, null);
+
                     Log.d(TAG, "Adding Word: " + line);
                 }
 
@@ -107,8 +123,16 @@ public class MainActivityFragment extends Fragment {
             super.onPostExecute(aVoid);
             prefs.edit().putBoolean(getString(R.string.imported), true).apply();
 
+            tileLinearLayout.setBackground(getActivity().getResources().getDrawable(R.drawable.remove));
             importButton.setText(R.string.import_dictionary_undo);
             progressBar.setVisibility(View.GONE);
+
+            tracker.send(new HitBuilders.EventBuilder()
+                            .setCategory("UX")
+                            .setAction("ImportDictionary")
+                            .setCategory("dota2")
+                            .build()
+            );
         }
     }
 
@@ -154,8 +178,16 @@ public class MainActivityFragment extends Fragment {
             super.onPostExecute(aVoid);
             prefs.edit().putBoolean(getString(R.string.imported), false).apply();
 
+            tileLinearLayout.setBackground(getActivity().getResources().getDrawable(R.drawable.add));
             importButton.setText(R.string.import_dictionary);
             progressBar.setVisibility(View.GONE);
+
+            tracker.send(new HitBuilders.EventBuilder()
+                            .setCategory("UX")
+                            .setAction("RevertDictionary")
+                            .setCategory("dota2")
+                            .build()
+            );
         }
     }
 }
