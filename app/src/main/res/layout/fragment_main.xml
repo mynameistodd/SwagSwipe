@@ -16,6 +16,15 @@
         android:gravity="bottom"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="115dp"
+            android:text="@string/dota2_tile_title"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
@@ -27,7 +36,7 @@
             android:id="@+id/importButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Import" />
+            android:text="@string/import_dictionary" />
     </LinearLayout>
 
 </LinearLayout>
