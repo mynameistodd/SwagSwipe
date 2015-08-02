@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
         tracker.enableAdvertisingIdCollection(true);
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-//        getPreferences(MODE_PRIVATE).edit().putString(getString(R.string.pref_version), BuildConfig.VERSION_NAME).apply();
 
         getFragmentManager().beginTransaction()
                 .add(R.id.container, new MainActivityFragment())

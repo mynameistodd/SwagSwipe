@@ -1,6 +1,7 @@
 package com.swaggaming.swagswipe;
 
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,8 +17,11 @@ public class SettingsFragment extends PreferenceFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preferences);
         setHasOptionsMenu(true);
+        addPreferencesFromResource(R.xml.preferences);
+
+        Preference versionPref = findPreference(getString(R.string.pref_version_key));
+        versionPref.setSummary(BuildConfig.VERSION_NAME);
     }
 
     @Override

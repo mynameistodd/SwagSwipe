@@ -19,7 +19,7 @@
                 android:data="@string/pref_legal_url" />
         </Preference>
         <Preference
-            android:summary=""
-            android:title="@string/pref_version"></Preference>
+            android:key="@string/pref_version_key"
+            android:title="@string/pref_version" />
     </PreferenceCategory>
 </PreferenceScreen>
