@@ -6,4 +6,20 @@
     <string name="import_dictionary_undo">Remove Dota Terms</string>
     <string name="dota2_tile_title">Dictionary for DOTA 2</string>
     <string name="instructions">Click to add popular Dota terms usable by your Google Keyboard. Click again to remove terms.</string>
+
+    <string name="pref_category_general">General</string>
+    <string name="pref_category_about">About</string>
+
+    <string name="pref_auto_update_key">pref_auto_update</string>
+    <string name="pref_auto_update_default">false</string>
+    <string name="pref_auto_update_title">Auto Update Dictionary</string>
+    <string name="pref_auto_update_summary">Add new terms after app updates</string>
+
+    <string name="pref_web_page">Website</string>
+    <string name="pref_web_page_url">http://www.swaggaming.com</string>
+
+    <string name="pref_legal">Legal</string>
+    <string name="pref_legal_url">http://www.swaggaming.com/legal</string>
+
+    <string name="pref_version">Version</string>
 </resources>

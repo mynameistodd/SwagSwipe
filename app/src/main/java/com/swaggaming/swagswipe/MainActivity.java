@@ -1,6 +1,8 @@
 package com.swaggaming.swagswipe;
 
+import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +28,13 @@ public class MainActivity extends AppCompatActivity {
 
         tracker = analytics.newTracker(R.xml.global_tracker);
         tracker.enableAdvertisingIdCollection(true);
+
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+//        getPreferences(MODE_PRIVATE).edit().putString(getString(R.string.pref_version), BuildConfig.VERSION_NAME).apply();
+
+        getFragmentManager().beginTransaction()
+                .add(R.id.container, new MainActivityFragment())
+                .commit();
     }
 
 
@@ -45,9 +54,23 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.container, new SettingsFragment())
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .addToBackStack(null)
+                    .commit();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() != 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 }
