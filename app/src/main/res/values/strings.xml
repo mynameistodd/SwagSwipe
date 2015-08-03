@@ -5,7 +5,7 @@
     <string name="import_dictionary">Add Dota Terms</string>
     <string name="import_dictionary_undo">Remove Dota Terms</string>
     <string name="dota2_tile_title">Dictionary for DOTA 2</string>
-    <string name="instructions">Click to add popular Dota terms usable by your Google Keyboard. Click again to remove terms.</string>
+    <string name="instructions">Click to add popular Dota terms to your Google Keyboard personal dictionary. Click again to remove terms. It\'ll take about 30 seconds.</string>
 
     <string name="pref_category_general">General</string>
     <string name="pref_category_about">About</string>
@@ -23,4 +23,6 @@
 
     <string name="pref_version_key">pref_version</string>
     <string name="pref_version">Version</string>
+    <string name="workingToastAdd">OK, here we go!</string>
+    <string name="workingToastRemove">As you wish, removing now.</string>
 </resources>

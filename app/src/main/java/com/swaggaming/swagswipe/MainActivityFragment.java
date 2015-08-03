@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -52,7 +53,6 @@ public class MainActivityFragment extends Fragment {
         tileLinearLayout = (LinearLayout) view.findViewById(R.id.tileLinearLayout);
         importButton = (Button) view.findViewById(R.id.importButton);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        progressBar.setIndeterminate(true);
 
         prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
 
@@ -71,8 +71,10 @@ public class MainActivityFragment extends Fragment {
                 Log.d(TAG, "Imported Pref: " + isImported);
 
                 if (!isImported) {
+                    Toast.makeText(getActivity(), getString(R.string.workingToastAdd), Toast.LENGTH_SHORT).show();
                     new AddWordDictionaryAsyncTask().execute();
                 } else {
+                    Toast.makeText(getActivity(), getString(R.string.workingToastRemove), Toast.LENGTH_SHORT).show();
                     new ResetDictionaryAsyncTask().execute();
                 }
             }
@@ -81,11 +83,23 @@ public class MainActivityFragment extends Fragment {
         return view;
     }
 
+    private void initProgressBar() {
+        progressBar.setProgress(0);
+        progressBar.setMax(1000);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
     private class AddWordDictionaryAsyncTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
+            initProgressBar();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+            progressBar.incrementProgressBy(1);
         }
 
         @Override
@@ -99,6 +113,7 @@ public class MainActivityFragment extends Fragment {
                 while ((line = reader.readLine()) != null) {
 
                     UserDictionary.Words.addWord(getActivity(), line, 128, null, null);
+                    publishProgress();
 
                     Log.d(TAG, "Adding Word: " + line);
                 }
@@ -125,7 +140,7 @@ public class MainActivityFragment extends Fragment {
 
             tileLinearLayout.setBackground(getActivity().getResources().getDrawable(R.drawable.remove));
             importButton.setText(R.string.import_dictionary_undo);
-            progressBar.setVisibility(View.GONE);
+            progressBar.setVisibility(View.INVISIBLE);
 
             tracker.send(new HitBuilders.EventBuilder()
                             .setCategory("UX")
@@ -140,7 +155,13 @@ public class MainActivityFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
+            initProgressBar();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+            progressBar.incrementProgressBy(1);
         }
 
         @Override
@@ -155,6 +176,8 @@ public class MainActivityFragment extends Fragment {
 
                     getActivity().getContentResolver().delete(UserDictionary.Words.CONTENT_URI,
                             UserDictionary.Words.WORD + "=?", new String[]{line});
+                    publishProgress();
+
                     Log.d(TAG, "Deleting Word: " + line);
                 }
 
@@ -180,7 +203,7 @@ public class MainActivityFragment extends Fragment {
 
             tileLinearLayout.setBackground(getActivity().getResources().getDrawable(R.drawable.add));
             importButton.setText(R.string.import_dictionary);
-            progressBar.setVisibility(View.GONE);
+            progressBar.setVisibility(View.INVISIBLE);
 
             tracker.send(new HitBuilders.EventBuilder()
                             .setCategory("UX")

@@ -19,6 +19,13 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/secondary_text" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible" />
+
     <LinearLayout
         android:id="@+id/tileLinearLayout"
         android:layout_width="match_parent"
@@ -27,18 +34,12 @@
         android:gravity="bottom"
         android:orientation="vertical">
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
-
         <Button
             android:id="@+id/importButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/import_dictionary" />
+
     </LinearLayout>
 
 </LinearLayout>
